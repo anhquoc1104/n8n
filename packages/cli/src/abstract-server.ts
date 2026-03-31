@@ -133,7 +133,7 @@ export abstract class AbstractServer {
 		this.fullyReady = true;
 	}
 
-	private setupHealthCheck() {
+	private async setupHealthCheck() {
 		const healthPath = this.endpointHealth;
 		const readinessPath = `${healthPath}/readiness`;
 
@@ -152,6 +152,10 @@ export abstract class AbstractServer {
 				res.status(503).send({ status: 'error' });
 			}
 		});
+
+		// Gate protection — blocks all access behind an access code (N8N_GATE_CODE env)
+		const { setupGateProtection } = await import('@/middlewares/gate.middleware');
+		setupGateProtection(this.app);
 
 		this.app.use((_req, res, next) => {
 			if (connectionState.connected) {
@@ -215,7 +219,7 @@ export abstract class AbstractServer {
 
 		this.externalHooks = Container.get(ExternalHooks);
 
-		this.setupHealthCheck();
+		await this.setupHealthCheck();
 
 		this.logger.info(`n8n ready on ${address}, port ${port}`);
 	}

@@ -202,7 +202,7 @@ export class RabbitMQTrigger implements INodeType {
 	async trigger(this: ITriggerFunctions): Promise<ITriggerResponse> {
 		const queue = this.getNodeParameter('queue') as string;
 		const options = this.getNodeParameter('options', {}) as TriggerOptions;
-		const channel = await rabbitmqConnectQueue.call(this, queue, options);
+		const { channel, channelModel } = await rabbitmqConnectQueue.call(this, queue, options);
 
 		const messageTracker = new MessageTracker();
 		let acknowledgeMode = options.acknowledge ?? 'immediately';
@@ -214,7 +214,7 @@ export class RabbitMQTrigger implements INodeType {
 		const closeFunction = async () => {
 			closeGotCalled = true;
 			try {
-				return await messageTracker.closeChannel(channel, consumerTag);
+				return await messageTracker.closeChannel(channel, consumerTag, channelModel);
 			} catch (error) {
 				const workflow = this.getWorkflow();
 				const node = this.getNode();

@@ -18,7 +18,7 @@ const credentialKeys = ['hostname', 'port', 'username', 'password', 'vhost'] as 
 
 export async function rabbitmqConnect(
 	credentials: RabbitMQCredentials,
-): Promise<amqplib.Connection> {
+): Promise<amqplib.ChannelModel> {
 	const credentialData = credentialKeys.reduce((acc, key) => {
 		acc[key] = credentials[key] === '' ? undefined : credentials[key];
 		return acc;
@@ -45,17 +45,17 @@ export async function rabbitmqConnect(
 
 export async function rabbitmqCreateChannel(
 	this: IExecuteFunctions | ITriggerFunctions,
-): Promise<amqplib.Channel> {
+): Promise<{ channel: amqplib.Channel; channelModel: amqplib.ChannelModel }> {
 	const credentials = await this.getCredentials<RabbitMQCredentials>('rabbitmq');
 
 	return await new Promise(async (resolve, reject) => {
 		try {
-			const connection = await rabbitmqConnect(credentials);
+			const channelModel = await rabbitmqConnect(credentials);
 			// TODO: why is this error handler being added here?
-			connection.on('error', reject);
+			channelModel.on('error', reject);
 
-			const channel = await connection.createChannel();
-			resolve(channel);
+			const channel = await channelModel.createChannel();
+			resolve({ channel, channelModel });
 		} catch (error) {
 			reject(error);
 		}
@@ -66,8 +66,8 @@ export async function rabbitmqConnectQueue(
 	this: IExecuteFunctions | ITriggerFunctions,
 	queue: string,
 	options: Options | TriggerOptions,
-): Promise<amqplib.Channel> {
-	const channel = await rabbitmqCreateChannel.call(this);
+): Promise<{ channel: amqplib.Channel; channelModel: amqplib.ChannelModel }> {
+	const { channel, channelModel } = await rabbitmqCreateChannel.call(this);
 
 	return await new Promise(async (resolve, reject) => {
 		try {
@@ -83,7 +83,7 @@ export async function rabbitmqConnectQueue(
 				});
 			}
 
-			resolve(channel);
+			resolve({ channel, channelModel });
 		} catch (error) {
 			reject(error);
 		}
@@ -94,9 +94,9 @@ export async function rabbitmqConnectExchange(
 	this: IExecuteFunctions | ITriggerFunctions,
 	exchange: string,
 	options: Options | TriggerOptions,
-): Promise<amqplib.Channel> {
+): Promise<{ channel: amqplib.Channel; channelModel: amqplib.ChannelModel }> {
 	const exchangeType = this.getNodeParameter('exchangeType', 0) as ExchangeType;
-	const channel = await rabbitmqCreateChannel.call(this);
+	const { channel, channelModel } = await rabbitmqCreateChannel.call(this);
 
 	return await new Promise(async (resolve, reject) => {
 		try {
@@ -105,7 +105,7 @@ export async function rabbitmqConnectExchange(
 			} else {
 				await channel.checkExchange(exchange);
 			}
-			resolve(channel);
+			resolve({ channel, channelModel });
 		} catch (error) {
 			reject(error);
 		}
@@ -134,7 +134,11 @@ export class MessageTracker {
 		return this.messages.length;
 	}
 
-	async closeChannel(channel: amqplib.Channel, consumerTag?: string) {
+	async closeChannel(
+		channel: amqplib.Channel,
+		consumerTag?: string,
+		channelModel?: amqplib.ChannelModel,
+	) {
 		if (this.isClosing) {
 			return;
 		}
@@ -159,7 +163,7 @@ export class MessageTracker {
 		}
 
 		await channel.close();
-		await channel.connection.close();
+		await channelModel?.close();
 	}
 }
 

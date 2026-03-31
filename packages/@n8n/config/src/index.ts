@@ -16,6 +16,7 @@ import { EndpointsConfig } from './configs/endpoints.config';
 import { EventBusConfig } from './configs/event-bus.config';
 import { ExecutionsConfig } from './configs/executions.config';
 import { ExternalHooksConfig } from './configs/external-hooks.config';
+import { GateConfig } from './configs/gate.config';
 import { GenericConfig } from './configs/generic.config';
 import { HiringBannerConfig } from './configs/hiring-banner.config';
 import { LicenseConfig } from './configs/license.config';
@@ -149,6 +150,9 @@ export class GlobalConfig {
 
 	@Nested
 	multiMainSetup: MultiMainSetupConfig;
+
+	@Nested
+	gate: GateConfig;
 
 	@Nested
 	generic: GenericConfig;

@@ -387,6 +387,7 @@ export class RabbitMQ implements INodeType {
 
 	async execute(this: IExecuteFunctions): Promise<INodeExecutionData[][]> {
 		let channel: amqplib.Channel | undefined;
+		let channelModel: amqplib.ChannelModel | undefined;
 		try {
 			const items = this.getInputData();
 			const operation = this.getNodeParameter('operation', 0);
@@ -401,7 +402,7 @@ export class RabbitMQ implements INodeType {
 
 				const options = this.getNodeParameter('options', 0, {}) as Options;
 
-				channel = await rabbitmqConnectQueue.call(this, queue, options);
+				({ channel, channelModel } = await rabbitmqConnectQueue.call(this, queue, options));
 
 				const sendInputData = this.getNodeParameter('sendInputData', 0) as boolean;
 
@@ -463,14 +464,14 @@ export class RabbitMQ implements INodeType {
 				});
 
 				await channel.close();
-				await channel.connection.close();
+				await channelModel?.close();
 			} else if (mode === 'exchange') {
 				const exchange = this.getNodeParameter('exchange', 0) as string;
 				const routingKey = this.getNodeParameter('routingKey', 0) as string;
 
 				const options = this.getNodeParameter('options', 0, {}) as Options;
 
-				channel = await rabbitmqConnectExchange.call(this, exchange, options);
+				({ channel, channelModel } = await rabbitmqConnectExchange.call(this, exchange, options));
 
 				const sendInputData = this.getNodeParameter('sendInputData', 0) as boolean;
 
@@ -533,7 +534,7 @@ export class RabbitMQ implements INodeType {
 				});
 
 				await channel.close();
-				await channel.connection.close();
+				await channelModel?.close();
 			} else {
 				throw new NodeOperationError(this.getNode(), `The operation "${mode}" is not known!`);
 			}
@@ -542,7 +543,7 @@ export class RabbitMQ implements INodeType {
 		} catch (error) {
 			if (channel) {
 				await channel.close();
-				await channel.connection.close();
+				await channelModel?.close();
 			}
 			throw error;
 		}
