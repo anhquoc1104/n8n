@@ -6,13 +6,27 @@ import { createHmac, timingSafeEqual } from 'node:crypto';
 const GATE_COOKIE_NAME = 'n8n-gate';
 const GATE_COOKIE_MAX_AGE_MS = 30 * 24 * 60 * 60 * 1000; // 30 days
 
-/** Paths that bypass the gate protection */
+/** Paths that natively bypass the gate protection */
 const BYPASS_PREFIXES = ['/healthz', '/favicon.ico'];
 
 /** Check if a request path should bypass the gate */
 function shouldBypassGate(path: string): boolean {
 	if (path === '/gate/verify') return true;
-	return BYPASS_PREFIXES.some((p) => path === p || path.startsWith(`${p}/`));
+
+	const { endpoints } = Container.get(GlobalConfig);
+	const bypassPrefixes = [
+		...BYPASS_PREFIXES,
+		`/${endpoints.webhook}`,
+		`/${endpoints.webhookTest}`,
+		`/${endpoints.webhookWaiting}`,
+		`/${endpoints.form}`,
+		`/${endpoints.formTest}`,
+		`/${endpoints.formWaiting}`,
+		`/${endpoints.mcp}`,
+		`/${endpoints.mcpTest}`,
+	];
+
+	return bypassPrefixes.some((p) => path === p || path.startsWith(`${p}/`));
 }
 
 /** Parse a specific cookie value from the raw Cookie header */
@@ -229,8 +243,9 @@ export function setupGateProtection(app: Application): void {
 
 		// For API requests, return 401 JSON
 		const accept = req.headers.accept ?? '';
+		const { endpoints } = Container.get(GlobalConfig);
 		if (
-			req.path.startsWith('/rest/') ||
+			req.path.startsWith(`/${endpoints.rest}/`) ||
 			(!accept.includes('text/html') && !accept.includes('*/*'))
 		) {
 			res.status(401).json({

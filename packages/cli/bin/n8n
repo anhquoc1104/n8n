@@ -36,8 +36,24 @@ require('reflect-metadata');
 // Skip loading dotenv in e2e tests.
 // Also, do not use `inE2ETests` from constants here, because that'd end up code that might read from `process.env` before the values are loaded from an `.env` file.
 if (process.env.E2E_TESTS !== 'true') {
-	// Loading dotenv early ensures that `process.env` is up-to-date everywhere in code
-	require('dotenv').config({ quiet: true });
+	// Loading dotenv early ensures that `process.env` is up-to-date everywhere in code.
+	// Walk up from this file's directory to find the nearest `.env` file,
+	// since CWD may vary depending on how n8n is launched (e.g. via os-normalize.mjs or turbo).
+	const fs = require('fs');
+	const dotenvPath = require('path');
+	let envDir = dotenvPath.resolve(__dirname);
+	let envFile;
+	while (true) {
+		const candidate = dotenvPath.join(envDir, '.env');
+		if (fs.existsSync(candidate)) {
+			envFile = candidate;
+			break;
+		}
+		const parent = dotenvPath.dirname(envDir);
+		if (parent === envDir) break; // reached filesystem root
+		envDir = parent;
+	}
+	require('dotenv').config({ path: envFile, quiet: true });
 }
 
 // Load config early to ensure `N8N_CONFIG_FILES` values are populated into `GlobalConfig`
