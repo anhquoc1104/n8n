@@ -73,7 +73,7 @@
     "@types/json-diff": "^1.0.0",
     "@types/jsonwebtoken": "catalog:",
     "@types/lodash": "catalog:",
-
+    "@types/psl": "^1.1.0",
     "@types/replacestream": "^4.0.1",
     "@types/shelljs": "^0.8.11",
     "@types/sshpk": "^1.17.4",
