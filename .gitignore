@@ -2,7 +2,8 @@ node_modules
 .DS_Store
 .tmp
 tmp
-dist
+# dist is committed pre-built for Render free plan (512MB RAM can't build)
+# dist
 coverage
 npm-debug.log*
 yarn.lock

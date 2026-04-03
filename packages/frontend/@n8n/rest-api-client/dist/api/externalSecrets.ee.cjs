@@ -1,0 +1,14 @@
+require('../utils2.cjs');
+const require_externalSecrets_ee = require('../externalSecrets.ee.cjs');
+
+exports.connectProvider = require_externalSecrets_ee.connectProvider;
+exports.getExternalSecrets = require_externalSecrets_ee.getExternalSecrets;
+exports.getExternalSecretsProvider = require_externalSecrets_ee.getExternalSecretsProvider;
+exports.getExternalSecretsProviders = require_externalSecrets_ee.getExternalSecretsProviders;
+exports.getGlobalExternalSecrets = require_externalSecrets_ee.getGlobalExternalSecrets;
+exports.getGlobalExternalSecretsForProject = require_externalSecrets_ee.getGlobalExternalSecretsForProject;
+exports.getProjectExternalSecrets = require_externalSecrets_ee.getProjectExternalSecrets;
+exports.reloadProvider = require_externalSecrets_ee.reloadProvider;
+exports.testExternalSecretsProviderConnection = require_externalSecrets_ee.testExternalSecretsProviderConnection;
+exports.updateExternalSecretsSettings = require_externalSecrets_ee.updateExternalSecretsSettings;
+exports.updateProvider = require_externalSecrets_ee.updateProvider;

@@ -1,0 +1,22 @@
+import { a as get, c as patch, l as post } from "./utils2.mjs";
+
+//#region src/api/workflowHistory.ts
+const getWorkflowHistory = async (context, workflowId, queryParams) => {
+	const { data } = await get(context.baseUrl, `/workflow-history/workflow/${workflowId}`, queryParams);
+	return data;
+};
+const getWorkflowVersion = async (context, workflowId, versionId) => {
+	const { data } = await get(context.baseUrl, `/workflow-history/workflow/${workflowId}/version/${versionId}`);
+	return data;
+};
+const getWorkflowVersionsByIds = async (context, workflowId, versionIds) => {
+	const { data } = await post(context.baseUrl, `/workflow-history/workflow/${workflowId}/versions`, { versionIds });
+	return data;
+};
+const updateWorkflowHistoryVersion = async (context, workflowId, versionId, data) => {
+	await patch(context.baseUrl, `/workflow-history/workflow/${workflowId}/versions/${versionId}`, data);
+};
+
+//#endregion
+export { updateWorkflowHistoryVersion as i, getWorkflowVersion as n, getWorkflowVersionsByIds as r, getWorkflowHistory as t };
+//# sourceMappingURL=workflowHistory.mjs.map

@@ -1,0 +1,7 @@
+require('../utils2.cjs');
+const require_workflowHistory = require('../workflowHistory.cjs');
+
+exports.getWorkflowHistory = require_workflowHistory.getWorkflowHistory;
+exports.getWorkflowVersion = require_workflowHistory.getWorkflowVersion;
+exports.getWorkflowVersionsByIds = require_workflowHistory.getWorkflowVersionsByIds;
+exports.updateWorkflowHistoryVersion = require_workflowHistory.updateWorkflowHistoryVersion;

@@ -1,0 +1,1 @@
+{"version":3,"file":"define2.cjs","names":[],"sources":["../../src/frontend/define.ts"],"sourcesContent":["import type { FrontendExtension } from './types.ts';\n\nexport function defineFrontendExtension(extension: FrontendExtension): FrontendExtension {\n\treturn extension;\n}\n"],"mappings":";;AAEA,SAAgB,wBAAwB,WAAiD;AACxF,QAAO"}

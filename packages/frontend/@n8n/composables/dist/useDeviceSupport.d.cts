@@ -1,0 +1,17 @@
+import * as vue0 from "vue";
+
+//#region src/useDeviceSupport.d.ts
+declare function useDeviceSupport(): {
+  userAgent: string;
+  isTouchDevice: boolean;
+  isAndroidOs: boolean;
+  isIOs: boolean;
+  isMacOs: boolean;
+  isMobileDevice: boolean;
+  controlKeyCode: string;
+  controlKeyText: vue0.ComputedRef<"⌘" | "Ctrl">;
+  isCtrlKeyPressed: (e: MouseEvent | KeyboardEvent) => boolean;
+};
+//#endregion
+export { useDeviceSupport };
+//# sourceMappingURL=useDeviceSupport.d.cts.map

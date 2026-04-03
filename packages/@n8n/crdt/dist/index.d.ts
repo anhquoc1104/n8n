@@ -1,0 +1,15 @@
+import type { CRDTConfig, CRDTProvider } from './types';
+export type { Unsubscribe, ArrayDelta, ArrayChangeEvent, DeepChangeEvent, DeepChange, TransactionBatch, CRDTArray, CRDTMap, CRDTDoc, CRDTProvider, CRDTConfig, AwarenessClientId, AwarenessState, AwarenessChangeEvent, CRDTAwareness, UndoManagerOptions, UndoStackChangeEvent, CRDTUndoManager, } from './types';
+export { ChangeAction, ChangeOrigin, CRDTEngine } from './types';
+export { isMapChange, isArrayChange } from './types';
+export { YjsAwareness } from './awareness/yjs-awareness';
+export { YjsUndoManager, YjsUndoManagerOrigin, YjsRemoteOrigin } from './undo/yjs-undo-manager';
+export { YjsProvider } from './providers/yjs';
+export type { SyncTransport } from './transports';
+export { MockTransport, MessagePortTransport, WebSocketTransport, WorkerTransport, BroadcastChannelTransport, } from './transports';
+export type { WebSocketTransportConfig, WorkerTransportConfig } from './transports';
+export type { SyncProvider, CreateSyncProvider } from './sync';
+export { BaseSyncProvider, createSyncProvider } from './sync';
+export { MESSAGE_SYNC, MESSAGE_AWARENESS, MESSAGE_SUBSCRIBE, MESSAGE_UNSUBSCRIBE, MESSAGE_CONNECTED, MESSAGE_DISCONNECTED, MESSAGE_INITIAL_SYNC, encodeMessage, decodeMessage, encodeWithDocId, decodeWithDocId, encodeString, decodeString, stripDocId, addDocId, } from './protocol';
+export { seedValueDeep, toJSON, getNestedValue, setNestedValue } from './utils';
+export declare function createCRDTProvider(config: CRDTConfig): CRDTProvider;

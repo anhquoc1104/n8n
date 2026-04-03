@@ -1,0 +1,11 @@
+import type { ModuleInterface } from '@n8n/decorators';
+export declare class DynamicCredentialsModule implements ModuleInterface {
+    init(): Promise<void>;
+    entities(): Promise<(typeof import("./database/entities/credential-resolver").DynamicCredentialResolver | typeof import("./database/entities/dynamic-credential-entry").DynamicCredentialEntry | typeof import("./database/entities/dynamic-credential-user-entry").DynamicCredentialUserEntry)[]>;
+    context(): Promise<{
+        credentialCheckProxy?: undefined;
+    } | {
+        credentialCheckProxy: import("./services").CredentialCheckProxyService;
+    }>;
+    shutdown(): Promise<void>;
+}

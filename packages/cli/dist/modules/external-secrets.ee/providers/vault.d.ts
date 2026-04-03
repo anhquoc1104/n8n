@@ -1,0 +1,33 @@
+import { Logger } from '@n8n/backend-common';
+import type { IDataObject, INodeProperties } from 'n8n-workflow';
+import type { SecretsProviderSettings } from '../types';
+import { SecretsProvider } from '../types';
+export declare class VaultProvider extends SecretsProvider {
+    #private;
+    readonly logger: Logger;
+    properties: INodeProperties[];
+    displayName: string;
+    name: string;
+    private cachedSecrets;
+    private settings;
+    private refreshTimeout;
+    private refreshAbort;
+    constructor(logger?: Logger);
+    init(settings: SecretsProviderSettings): Promise<void>;
+    protected doConnect(): Promise<void>;
+    disconnect(): Promise<void>;
+    private setupTokenRefresh;
+    private tokenRefresh;
+    private authUsernameAndPassword;
+    private authAppRole;
+    private getTokenInfo;
+    private getKVSecrets;
+    private normalizeKvPath;
+    private discoverKvMounts;
+    private testSecretAccess;
+    update(): Promise<void>;
+    test(): Promise<[boolean] | [boolean, string]>;
+    getSecret(name: string): IDataObject;
+    hasSecret(name: string): boolean;
+    getSecretNames(): string[];
+}

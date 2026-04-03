@@ -1,0 +1,1 @@
+{"version":3,"file":"define2.mjs","names":[],"sources":["../../src/backend/define.ts"],"sourcesContent":["import type { BackendExtension } from './types.ts';\n\nexport function defineBackendExtension(extension: BackendExtension): BackendExtension {\n\treturn extension;\n}\n"],"mappings":";AAEA,SAAgB,uBAAuB,WAA+C;AACrF,QAAO"}

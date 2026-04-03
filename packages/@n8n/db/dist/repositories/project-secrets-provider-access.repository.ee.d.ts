@@ -1,0 +1,13 @@
+import { DataSource, Repository } from '@n8n/typeorm';
+import { ProjectSecretsProviderAccess } from '../entities';
+import type { SecretsProviderAccessRole } from '../entities';
+export declare class ProjectSecretsProviderAccessRepository extends Repository<ProjectSecretsProviderAccess> {
+    constructor(dataSource: DataSource);
+    findByConnectionId(secretsProviderConnectionId: number): Promise<ProjectSecretsProviderAccess[]>;
+    findByProjectId(projectId: string): Promise<ProjectSecretsProviderAccess[]>;
+    deleteByConnectionId(secretsProviderConnectionId: number): Promise<void>;
+    updateProjectAccess(secretsProviderConnectionId: number, projectIdsToRemove: string[], entriesToAdd: Array<{
+        projectId: string;
+        role: SecretsProviderAccessRole;
+    }>): Promise<void>;
+}
